@@ -1,0 +1,12 @@
+config.py
+config.py~
+*˜
+.projectile
+/.gitignore~
+/bootstrap_api.sh~
+/loaders.sh~
+/requirements.txt~
+/series_fetchers.sh~
+*.*pyc
+*.*˜
+*/index/*

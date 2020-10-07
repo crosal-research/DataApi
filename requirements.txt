@@ -1,0 +1,15 @@
+bottle
+pandas
+xlrd
+helium
+python-selenium
+aiohttp
+pony
+bs4
+requests
+python-dateutil
+dateparser
+whoosh
+olefile
+pendulum
+bottle-cors

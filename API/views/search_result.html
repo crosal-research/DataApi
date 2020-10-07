@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<h3> Resultado da Pesquisa: {{data | length()}} Items </h3>
+
+{% for obs in data %}
+  <ol><strong>{{obs.ticker}}</strong> 
+    <li>{{obs.description}}  </li>
+    <li>{{obs.country}}  </li>
+    <li>{{obs.source}}  </li>
+  </ol>
+  {% endfor %}
+  {% endblock %}
+
+
+
+  
+
+  
