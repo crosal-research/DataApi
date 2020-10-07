@@ -2,7 +2,7 @@
 import os, json
 
 # imports of packages
-from bottle import Bottle, run, request, response, static_file #, template, TEMPLATE_PATH
+from bottle import Bottle, run, request, response, static_file #, template, TEMPLATE
 from truckpad.bottle.cors import CorsPlugin, enable_cors
 
 import pandas as pd
@@ -32,25 +32,6 @@ def css(filepath):
     return static_file(filepath, root=root + "/css")
 
 
-@app.post('/search')
-def fetch_data(results="results"):
-    words = request.forms.getall("words")
-    fort = request.forms.get("format")
-
-    if len(words) == 0:
-        return "Please, add words for you search"
-    else:
-        sentence = words[0].encode("latin1").decode("utf-8")
-#        try:
-        dic = query_docs(sentence)
-        return env.get_template("search_result.html").render(data=dic)
-
-#        return template("search_template", results=json.loads(dic))
-#        except:
-
-#return "Nothing to return"
-
-
 ########### API
 @enable_cors
 @app.get('/api')
@@ -68,8 +49,6 @@ def fetch_data():
             if fort == "csv":
                 return fetch_multi_series(srs).to_csv()
             else:
-                # print(fetch_multi_series(srs).to_json(date_unit="s", 
-                #                                       date_format="iso"))
                 return fetch_multi_series(srs).to_json(date_unit="s", 
                                                        date_format="iso")
         except:
