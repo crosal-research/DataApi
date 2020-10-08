@@ -10,14 +10,15 @@ import pandas as pd
 # apps imports
 from DB.transactions import fetch_multi_series
 from Search.transactions import query_docs
+from Loaders.fetch_obs import fetch_obs
 
 
 # App definition
-root=os.path.join(os.path.dirname(__file__), 'static')
+root = os.path.join(os.path.dirname(__file__), 'static')
 app = Bottle()
 
 
-######## Webpage
+######## Webpage End points and Assets routes
 @app.get("/")
 def home():
     return env.get_template("index.html").render()
@@ -72,6 +73,17 @@ def fetch_data():
             dj = query_docs(sentence)
             response.content_type = 'application/json'
             return json.dumps(dj)
+
+
+@enable_cors
+@app.get('/admin/upserts')
+def upserts():
+    source = request.query.getall("source")
+    if len(source) == 0:
+        return "Please, add a source for your update"
+    else:
+        return fetch_obs(source[0])
+
 
 app.install(CorsPlugin(origins=['http://localhost:5000']))
 run(app, host='localhost', port=8090, debbug=True)

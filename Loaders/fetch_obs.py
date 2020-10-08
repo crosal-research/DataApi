@@ -1,11 +1,13 @@
 #imports from app
-from Loaders.Observations import bcb, bcb_exp, cepea, ibge
-from Loaders.Observations import covid_international, ons
-from Loaders.Observations import fred, pnad_covid, mobility_apple
+# from Loaders.Observations import bcb, bcb_exp, cepea, ibge
+# from Loaders.Observations import covid_international, ons
+# from Loaders.Observations import fred, pnad_covid, mobility_apple
 from DB.transactions import fetch_series_list
 
 
-def fecth_obs(source: str, limit=None) ->None:
+__all__ = ["fetch_obs"]
+
+def fetch_obs(source: str, limit=None) -> None:
     """fetches and updates (inserts) observations of a particular source
     (ex:BCB) and for last (limit) observations. If limit = None, all
     observations are updated
@@ -38,7 +40,6 @@ def fecth_obs(source: str, limit=None) ->None:
     elif Usource == "PNAD_COVID":
         # needs to be implemented
         return "PNAD_COVID"
-
     else:
         # needs to be implemented: 
         return "APPLE"
