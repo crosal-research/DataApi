@@ -15,9 +15,14 @@ import time
 import requests
 import olefile
 import pandas as pd
+import pendulum
 
 #app imports
 from DB.transactions import add_batch_observations
+
+
+__all__ = ["fetch", "tickers"]
+
 t1 = time.time()
 
 
@@ -25,6 +30,8 @@ info = [("milho", 77),
         ("acucar", 53),
         ("etanol-diario-paulinia", 111), 
         ("boi-gordo", 2)]
+
+tickers = [f"cepea.{n}" for _, n in info]
 
 
 def build_url(name:str, number:int) -> str:
@@ -49,22 +56,30 @@ def process(resp:requests.models.Response) -> pd.DataFrame:
         print("resp.url")
 
 
-def fetch(tickers):
+def fetch(tickers, limit):
+    global dfs
     urls = [build_url(*p) for p in info]
     with requests.session() as session:
         with executor() as e:
             dfs = list(e.map(lambda url:process(session.get(url)), 
                              list(urls)))
     with executor() as e1:
+        if not limit:
+            pass
+        else:
+            dfs =[df.tail(limit) for df in dfs]
         z = list(zip(tickers, dfs))
         e1.map(lambda tck: add_batch_observations(*tck), z)
 
 
+    
+    print("################################################################")
+    print(f"series from cepea added to the database:{time.time()-t1}")    
+
+    return {"source": "cepea", "status": "Updated", 
+            "@": pendulum.now().to_datetime_string(), 
+            "limit": limit}
+
+
 ##############################Main##############################
 
-tickers = [f"cepea.{n}" for _, n in info]
-
-fetch(tickers)
-
-print("################################################################")
-print(f"series from cepea added to the database:{time.time()-t1}")    

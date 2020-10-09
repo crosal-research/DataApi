@@ -9,7 +9,6 @@ from bs4 import BeautifulSoup as bs
 # import from app
 from DB.transactions import add_series
 
-
 #ver casos para tabelas: 6022, 3419
 
 data = {1620:{"v":"", "c":"", "c1": None}, #contas nacionais

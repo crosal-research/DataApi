@@ -11,8 +11,6 @@ import numpy as np
 #import from app
 from DB.transactions import add_batch_observations, fetch_series_list
 
-__all__ == ['fetch']
-
 
 def build_url(tck:str, limit=None) -> str:
     tck_new = tck.split(".")[1]
@@ -57,9 +55,9 @@ def fetch(tickers:list, limit=None) -> None:
 
     print(f"Done updating ibge data: {time.time() - t1} seconds")
 
+    return {"source": "FRED", "status": "updated", 
+            "@": pendulum.now().to_datetime_string(), 
+            "limit": limit}
 
 ##############################MAIN##############################
 
-if __name__ == "main":
-    tickers = fetch_series_list("ibge").Ticker
-    fetch(tickers)

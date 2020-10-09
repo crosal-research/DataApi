@@ -1,12 +1,19 @@
+# import from systems
+from concurrent.futures import ThreadPoolExecutor as executor
+
 # import from packages
 import pandas as pd
-import asyncio, aiohttp
+import requests
+#import asyncio, aiohttp
 from io import StringIO
 import datetime as dt
 
 # app imports
 from DB.transactions import add_batch_observations
 
+__all__ = ['fetch', 'tickers']
+
+tickers = ["ons.carga"]
 
 # dates = ["2017_05_31",
 #          "2017_06_30",
@@ -59,46 +66,51 @@ from DB.transactions import add_batch_observations
 
 
 
-dates= [ "2020_07_31", 
-         "2020_08_31", 
-         "2020_09_30", 
-         "2020_10_06"]
 
 
 
-def url(dat):
+def build_url(dat):
     return f"http://sdro.ons.org.br/SDRO/DIARIO/{dat}/HTML/07_DadosDiariosAcumulados_Regiao.html"
 
-urls = [url(d) for d in dates]
 
-async def fetch_data(url):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-            resp = await response.text()
-            try:
-                df = pd.read_html(resp)[0]
-                df = pd.read_html(url)[0]
-                dc = df.iloc[2:, :]
-                dc.columns = df.iloc[1, :].values
-                dc.set_index(["Data"], inplace=True)
-                return dc.applymap(lambda x: pd.to_numeric(x))
-            except:
-                print(url)
+def process(resp):
+    try:
+        df = pd.read_html(StringIO(resp.text))[0]
+        dc = df.iloc[2:, :]
+        dc.columns = df.iloc[1, :].values
+        dc.set_index(["Data"], inplace=True)
+        return dc.applymap(lambda x: pd.to_numeric(x))
+    except:
+        print(resp.url)
 
-async def fetch_all(urls):
-    return  await asyncio.gather(*[fetch_data(url) for url in urls])
+
+def fetch(tickers: list, limit):
+    dates= ["2020_07_31", 
+            "2020_08_31", 
+            "2020_09_30", 
+            "2020_10_08"]
+
+    urls = [build_url(d) for d in dates]
+
+    with requests.session() as session:
+        with executor() as e:
+            dfs = list(e.map(lambda url: process(requests.get(url)), urls))
+
+    dfinal = pd.concat(dfs, axis=0, join="inner")
+    dfinal.drop_duplicates(inplace=True)
+    dfinal.dropna(inplace=True)
+    dats = [dt.datetime.strptime(d,"%d/%m/%Y") for d in dfinal.index]
+    dfinal.index = dats
+    if not limit:
+        dfinal = dfinal.tail(limit)
     
-dfs = asyncio.run(fetch_all(urls))
+    try:
+        add_batch_observations(tickers[0], dfinal.iloc[:, [-1]])
+        print("ONS.CARGA updated!")
+        return {"source": "ONS", "status": "Updated!"}
+    except:
+        print("Failed to add observations ons.CARGA in to the database")
+        return {"source": "ONS", "status": "Failed to Update"}
+    
 
-dfinal = pd.concat(dfs, axis=0, join="inner")
-dfinal.drop_duplicates(inplace=True)
-dfinal.dropna(inplace=True)
-dats = [dt.datetime.strptime(d,"%d/%m/%Y") for d in dfinal.index]
-dfinal.index = dats
-
-try:
-    add_batch_observations("ons.carga", dfinal.iloc[:, [-1]])
-    print("ONS.CARGA updated!")
-except:
-    print("Failed to add observations ons.CARGA in to the database")
 

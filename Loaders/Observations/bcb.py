@@ -9,7 +9,7 @@ import pandas as pd
 #import from aap
 from DB.transactions import add_batch_observations, fetch_series_list
 
-__all__ = ["fetch"]
+__all__ = ["fetch", "tickers"]
 
 
 def build_url(fulltck: str, limit=None) -> str:
@@ -37,7 +37,7 @@ def process(resp:requests.models.Response) -> pd.DataFrame:
         print(resp.url)
 
 
-def fetch(tickers: list, limit=None) -> None:
+def fetch(tickers: list, limit) -> None:
     """
     Fetch the observations from the bcb's api. If 
     """
@@ -55,6 +55,9 @@ def fetch(tickers: list, limit=None) -> None:
 
     print("##############################################")
     print(f"Done updating Observations for BCB: {time.time() - t1} seconds")
+    return {"source": "BCB", "status": "Updated", 
+            "@": pendulum.now().to_datetime_string(), 
+            "limit": limit}
 
 
 ##############################MAIN##############################
@@ -62,5 +65,5 @@ def fetch(tickers: list, limit=None) -> None:
 remove_list = ["BCB.195", "BCB.25"]
 tickers = [t for t in fetch_series_list("bcb").Ticker.values 
                if t not in remove_list]
-fetch(tickers, 10) 
+###fetch(tickers, 10) 
 

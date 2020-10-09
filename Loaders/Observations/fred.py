@@ -1,6 +1,8 @@
 # import system
 from concurrent.futures import ThreadPoolExecutor as executor
+from typing import Optional
 from datetime import datetime as dt
+import pendulum
 import time
 
 # imports packages
@@ -11,10 +13,10 @@ import pandas as pd
 from DB.transactions import add_batch_observations, fetch_series_list
 import config
 
-__all__ == ["fetch"]
+__all__ = ["fetch"]
 
 
-def build_fred(key, ticker, limit=None):
+def build_fred(key, ticker, limit: Optional[int] = None):
     if not limit:
         return f"https://api.stlouisfed.org/fred/series/observations?" + \
             f"series_id={ticker}&api_key={key}&file_type=json"
@@ -30,7 +32,7 @@ def process(resp):
     return (df.applymap(lambda v: float(v) if v != "." else None)).sort_index()
 
 
-def fetch(tickers, limit=None):
+def fetch(tickers:str, limit: Optional[int] = None):
     key = config.keys["fred"]
     urls =[build_fred(key, tck.split(".")[1], limit) for tck in tickers]
     with requests.session() as session:
@@ -46,13 +48,16 @@ def fetch(tickers, limit=None):
         def _add(df):
             add_batch_observations(df.columns[0], df)
         e1.map(_add, dfs)
+    return {"source": "FRED", "status": "updated", 
+            "@": pendulum.now().to_datetime_string(), 
+            "limit": limit}
 
 
 ########################MAIN##############################################
 
-if __name__ == "main":
-    t1 = time.time()
-    tickers = fetch_series_list("fred").Ticker.values
-    fetch(tickers, 10)
-    print("#########################FRED#############################")
-    print(f"Finishing updating FRED after {time.time() - t1} seconds")    
+# if __name__ == "main":
+#     t1 = time.time()
+#     tickers = fetch_series_list("fred").Ticker.values
+#     fetch(tickers, 10)
+#     print("#########################FRED#############################")
+#     print(f"Finishing updating FRED after {time.time() - t1} seconds")    
