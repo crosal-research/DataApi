@@ -7,9 +7,10 @@ import json, time
 import requests
 import pandas as pd
 import numpy as np
+import pendulum
 
 #import from app
-from DB.transactions import add_batch_observations, fetch_series_list
+from DB.transactions import add_batch_observations
 
 
 def build_url(tck:str, limit=None) -> str:

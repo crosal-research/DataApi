@@ -14,13 +14,14 @@ __all__ = ["fetch_obs"]
 
 source_dict = {"BCB": bcb.fetch,
                "IBGE": ibge.fetch, 
-               "IPEA":"IPEA", 
+               "IPEA": ipea.fetch, 
                "FRED": fred.fetch, 
                "CEPEA": cepea.fetch, 
                "COVID_INTERNATIONAL":"COVID_INTERNATIONAL", 
                "PNAD_COVID":"PNAD_COVID", 
                "APPLE": "APPLE", 
-               "ONS": ons.fetch}
+               "ONS": ons.fetch, 
+               "BCB_EXP": "BCB_EXP"}
 
 
 def fetch_obs(source: str, limit: Optional[int]=10) -> dict:
