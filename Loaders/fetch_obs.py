@@ -3,11 +3,11 @@ from functools import wraps
 from typing import Optional
 
 # imports from app
-from Loaders.Observations import bcb, cepea, ibge, ons, fred
+from Loaders.Observations import bcb, cepea, ibge, ons, fred, ipea
 # from Loaders.Observations import covid_international, ons, bcb_exp
 # from Loaders.Observations import fred, pnad_covid, mobility_apple
 from DB.transactions import fetch_series_list
-
+import pendulum
 
 __all__ = ["fetch_obs"]
 
@@ -30,5 +30,8 @@ def fetch_obs(source: str, limit: Optional[int]=10) -> dict:
     observations are updated. Does the upserts through side effects
     """
     Usource = source.upper()
+    start = pendulum.now().to_datetime_string()
     tickers = list(fetch_series_list(Usource).Ticker)
-    return source_dict[Usource](tickers, limit)
+    results = source_dict[Usource](tickers, limit)
+    results["start"] = start
+    return results

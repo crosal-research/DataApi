@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor as executor
 # import from packages
 import pandas as pd
 import requests
-#import asyncio, aiohttp
+import pendulum
 from io import StringIO
 import datetime as dt
 
@@ -107,10 +107,14 @@ def fetch(tickers: list, limit):
     try:
         add_batch_observations(tickers[0], dfinal.iloc[:, [-1]])
         print("ONS.CARGA updated!")
-        return {"source": "ONS", "status": "Updated!"}
+        return {"source": "ONS", "status": "Updated!", 
+                "time": pendulum.now().to_datetime_string(), 
+                "limit": limit}
     except:
         print("Failed to add observations ons.CARGA in to the database")
-        return {"source": "ONS", "status": "Failed to Update"}
+        return {"source": "ONS", "status": "Failed to Update", 
+                "time": pendulum.now().to_datetime_string(), 
+                "limit": limit}
     
 
 

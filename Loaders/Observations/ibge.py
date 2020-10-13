@@ -57,7 +57,7 @@ def fetch(tickers:list, limit=None) -> None:
     print(f"Done updating ibge data: {time.time() - t1} seconds")
 
     return {"source": "FRED", "status": "updated", 
-            "@": pendulum.now().to_datetime_string(), 
+            "time": pendulum.now().to_datetime_string(), 
             "limit": limit}
 
 ##############################MAIN##############################

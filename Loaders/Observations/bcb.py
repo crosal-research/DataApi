@@ -5,6 +5,7 @@ import io, json, time
 # import from packages
 import requests
 import pandas as pd
+import pendulum
 
 #import from aap
 from DB.transactions import add_batch_observations, fetch_series_list
@@ -56,14 +57,14 @@ def fetch(tickers: list, limit) -> None:
     print("##############################################")
     print(f"Done updating Observations for BCB: {time.time() - t1} seconds")
     return {"source": "BCB", "status": "Updated", 
-            "@": pendulum.now().to_datetime_string(), 
+            "time": pendulum.now().to_datetime_string(), 
             "limit": limit}
 
 
 ##############################MAIN##############################
 
-remove_list = ["BCB.195", "BCB.25"]
-tickers = [t for t in fetch_series_list("bcb").Ticker.values 
-               if t not in remove_list]
+# remove_list = ["BCB.195", "BCB.25"]
+# tickers = [t for t in fetch_series_list("bcb").Ticker.values 
+#                if t not in remove_list]
 ###fetch(tickers, 10) 
 

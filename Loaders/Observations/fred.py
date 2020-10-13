@@ -49,7 +49,7 @@ def fetch(tickers:str, limit: Optional[int] = None):
             add_batch_observations(df.columns[0], df)
         e1.map(_add, dfs)
     return {"source": "FRED", "status": "updated", 
-            "@": pendulum.now().to_datetime_string(), 
+            "time": pendulum.now().to_datetime_string(), 
             "limit": limit}
 
 

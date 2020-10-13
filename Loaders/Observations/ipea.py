@@ -11,6 +11,8 @@ import pendulum
 #app imports
 from DB.transactions import add_batch_observations
 
+__all__ = ['fetch']
+
 def build_url(num:int) -> str:
     """
     builds the url to fetch the data at ipeadatas webpage. 
@@ -40,7 +42,7 @@ def fetch(tickers:list, limit: Optional[int]) -> dict:
         e1.map(lambda z: add_batch_observations(*z), list(dz))
                 
     return {"source": "IPEA", "status": "updated", 
-            "@": pendulum.now().to_datetime_string(), 
+            "time": pendulum.now().to_datetime_string(), 
             "limit": limit}
 
 
