@@ -77,7 +77,7 @@ def fetch(tickers, limit):
     print(f"series from cepea added to the database:{time.time()-t1}")    
 
     return {"source": "cepea", "status": "Updated", 
-            "@": pendulum.now().to_datetime_string(), 
+            "time": pendulum.now().to_datetime_string(), 
             "limit": limit}
 
 
