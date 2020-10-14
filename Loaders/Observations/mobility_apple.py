@@ -1,6 +1,7 @@
 # import system's package
 from concurrent.futures import ThreadPoolExecutor as executor
 from typing import Optional
+import time
 
 # import packages
 import helium as hl
@@ -8,7 +9,7 @@ import requests
 from io import StringIO
 import pandas as pd
 from datetime import datetime as dt
-import time
+import pendulum
 
 # app imports
 from DB.transactions import add_batch_observations
@@ -68,4 +69,6 @@ def fetch(tickers: list, limit: Optional[int]=10):
             except:
                 print (f"Ticker {tck[0]} not sucessfully added")
         e.map(lambda tck: _add(tck), zl)
-    return df
+
+    return {"source": "APPLE", "limit": limit, 
+            "time": pendulum.now().to_datetime_string()}
