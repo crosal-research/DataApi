@@ -4,7 +4,7 @@ from typing import Optional
 
 # imports from app
 from Loaders.Observations import bcb, cepea, ibge, ons, fred, ipea
-from Loaders.Observations import mobility_apple # bcb_exp
+from Loaders.Observations import mobility_apple, bcb_exp
 # from Loaders.Observations import fred, pnad_covid, covid_internacional
 from DB.transactions import fetch_series_list
 import pendulum
@@ -21,7 +21,7 @@ source_dict = {"BCB": bcb.fetch,
                "PNAD_COVID":"PNAD_COVID", 
                "APPLE": mobility_apple.fetch, 
                "ONS": ons.fetch, 
-               "BCB_EXP": "BCB_EXP"}
+               "BCB_EXP": bcb_exp.fetch}
 
 
 def fetch_obs(source: str, limit: Optional[int]=10) -> dict:
