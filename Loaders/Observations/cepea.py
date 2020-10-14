@@ -10,6 +10,7 @@
 # import form the system
 from concurrent.futures import ThreadPoolExecutor as executor
 import time
+from typing import Optional
 
 # import from packages
 import requests
@@ -35,10 +36,11 @@ tickers = [f"cepea.{n}" for _, n in info]
 
 
 def build_url(name:str, number:int) -> str:
-    """
-    builds the relevant url for the security in case
+    """builds the relevant url for the security in case
+
     """
     return f'https://www.cepea.esalq.usp.br/br/indicador/series/{name}.aspx?id={number}'
+
 
 def process(resp:requests.models.Response) -> pd.DataFrame:
     """
@@ -56,8 +58,12 @@ def process(resp:requests.models.Response) -> pd.DataFrame:
         print("resp.url")
 
 
-def fetch(tickers, limit):
-    global dfs
+def fetch(tickers: list, limit: Optional[int]):
+    """Upserts data, fetching from sourcing and adding into the database.
+    tickers defines which series should be upserted, and limit the
+    tail observations to be inserted. If limit is None, all
+    observations are inserted
+    """
     urls = [build_url(*p) for p in info]
     with requests.session() as session:
         with executor() as e:
@@ -79,7 +85,6 @@ def fetch(tickers, limit):
     return {"source": "cepea", "status": "Updated", 
             "time": pendulum.now().to_datetime_string(), 
             "limit": limit}
-
 
 ##############################Main##############################
 
