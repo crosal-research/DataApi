@@ -12,7 +12,7 @@ import pendulum
 
 
 # app imports
-from DB.transactions import add_series, fetch_series_list
+from DB.transactions import add_series
 
 url = "https://www.ibge.gov.br/estatisticas/"
 url = url + "investigacoes-experimentais/estatisticas-experimentais/27946-divulgacao-semanal-pnadcovid1?"
