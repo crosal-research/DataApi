@@ -1,6 +1,7 @@
 #import from system
 from concurrent.futures import ThreadPoolExecutor as executor
 from typing import Optional
+
 # import from packages
 import requests
 import pandas as pd
@@ -11,13 +12,13 @@ import pendulum
 from DB.transactions import add_batch_observations
 
 
+__all__ = ["fetch"]
+
 def build_url(cases:str)->str:
     """
     forms the relevant url. case = [confirmed, deaths]
     """
-    return "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/"+ \
-        "master/csse_covid_19_data/csse_covid_19_time_series/"+  \ 
-        f"time_series_covid19_{cases}_global.csv"
+    return f"https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_{cases}_global.csv"
 
 def _process(resp:requests.models.Response)-> pd.DataFrame:
     """
@@ -33,11 +34,12 @@ def _process(resp:requests.models.Response)-> pd.DataFrame:
     return df
 
 
-def fetch(tickers:str, limit:Optional[int] = 10):
+def fetch(tickers:str, limit:Optional[int] = 10) -> dict:
     """
     upsert the observations of tickers into the database. If limit is None
     to that for the whole set of observations; if limit is int, does that
-    only for the latest limit observation
+    only for the latest limit observation. Return information about the upsert,
+    but operates via side-effects
     """
     urls = [build_url(cases) for cases in ["confirmed", "deaths"]]
     

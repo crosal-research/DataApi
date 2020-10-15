@@ -2,12 +2,13 @@
 from functools import wraps
 from typing import Optional
 
+# import from packages
+import pendulum
+
 # imports from app
 from Loaders.Observations import bcb, cepea, ibge, ons, fred, ipea
-from Loaders.Observations import mobility_apple, bcb_exp
-# from Loaders.Observations import fred, pnad_covid, covid_internacional
+from Loaders.Observations import mobility_apple, bcb_exp, covid
 from DB.transactions import fetch_series_list
-import pendulum
 
 __all__ = ["fetch_obs"]
 
@@ -17,7 +18,7 @@ source_dict = {"BCB": bcb.fetch,
                "IPEA": ipea.fetch, 
                "FRED": fred.fetch, 
                "CEPEA": cepea.fetch, 
-               "COVID_INTERNATIONAL":"COVID_INTERNATIONAL", 
+               "COVID": covid.fetch, 
                "PNAD_COVID":"PNAD_COVID", 
                "APPLE": mobility_apple.fetch, 
                "ONS": ons.fetch, 
