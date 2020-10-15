@@ -20,7 +20,11 @@ url = url + "investigacoes-experimentais/estatisticas-experimentais/27946-divulg
 url = url + "t=resultados&utm_source=covid19&utm_medium=hotsite&utm_campaign=covid_19"
 
 
-def _process(resp: requests.models.Response)-> pd.DataFrame:
+def _process(resp:requests.models.Response)-> pd.DataFrame:
+    """
+    takes a response from the source url and process it into a datafram
+    that can be consumed in order to add observations into the database
+    """
     soup = BeautifulSoup(resp.content, "html.parser")
     resource = [l for l in soup.select("p a") 
                 if l.text == 'Tabelas de resultados'][0]["href"]
