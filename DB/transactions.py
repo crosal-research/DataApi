@@ -142,7 +142,7 @@ def delete_obs(ticker:str, ini=None, end=None):
 
 
 @orm.db_session            
-def delete_series(ticker:str, ini=None, end=None):
+def delete_series(ticker:str):
     Uticker = ticker.upper()
     (orm.select(s for s in db.Series 
                 if s.ticker == Uticker)).delete()
