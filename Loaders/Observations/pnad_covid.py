@@ -33,7 +33,6 @@ def _process(resp:requests.models.Response)-> pd.DataFrame:
     dp = (dfs[0]).loc[[("CV" not in str(i)) for i in dfs[0].Indicador], 
                       [("Situação" not in c) for c in dfs[0].columns]]
 
-
     # separates data
     dp_td = dp[[("Taxa de desocupação" in str(i)) for i in dp.Indicador]].iloc[[0],:]
     dp_tp = dp[[("Taxa de participação" in str(i)) for i in dp.Indicador]].iloc[[0], :]
