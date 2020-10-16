@@ -8,6 +8,7 @@ import pendulum
 # imports from app
 from Loaders.Observations import bcb, cepea, ibge, ons, fred, ipea
 from Loaders.Observations import mobility_apple, bcb_exp, covid, pnad_covid
+from Loaders.Observations import bcb_vencimentos
 from DB.transactions import fetch_series_list
 
 __all__ = ["fetch_obs"]
@@ -22,7 +23,8 @@ source_dict = {"BCB": bcb.fetch,
                "PNAD_COVID": pnad_covid.fetch, 
                "APPLE": mobility_apple.fetch, 
                "ONS": ons.fetch, 
-               "BCB_EXP": bcb_exp.fetch}
+               "BCB_EXP": bcb_exp.fetch, 
+               "BCB_VENCIMENTOS": bcb_vencimentos.fetch}
 
 
 def fetch_obs(source: str, limit: Optional[int]=10) -> dict:
