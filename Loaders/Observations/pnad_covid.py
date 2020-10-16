@@ -64,7 +64,8 @@ def fetch(tickers:str, limit:Optional[int]=10):
     with executor() as e:
         e.map(lambda tck: add_batch_observations(tck, df.loc[:,[tck]]), 
               tickers)
-    return {"source":"PNAD_COVID", 
+    return {"source":"PNAD_COVID",
+            "Status":"updated",
             "time": pendulum.now().to_datetime_string(), 
             "limit": limit}
 

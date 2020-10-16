@@ -70,5 +70,7 @@ def fetch(tickers: list, limit: Optional[int]=10):
                 print (f"Ticker {tck[0]} not sucessfully added")
         e.map(lambda tck: _add(tck), zl)
 
-    return {"source": "APPLE", "limit": limit, 
+    return {"source": "APPLE", 
+            "status": "updated",
+            "limit": limit, 
             "time": pendulum.now().to_datetime_string()}

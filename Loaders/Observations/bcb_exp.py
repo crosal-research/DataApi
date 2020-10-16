@@ -120,7 +120,8 @@ def fetch(tickers: str, limit: Optional[int]=10) -> dict:
     with executor() as e:
         e.map(_add, tickers)
         
-    return {"source": "BCB_EXP", 
+    return {"source": "BCB_EXP",
+            "status": "update",
             "limit": limit,
             "time": pendulum.now().to_datetime_string()}
 

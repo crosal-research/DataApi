@@ -52,12 +52,3 @@ def fetch(tickers:str, limit: Optional[int] = None):
             "time": pendulum.now().to_datetime_string(), 
             "limit": limit}
 
-
-########################MAIN##############################################
-
-# if __name__ == "main":
-#     t1 = time.time()
-#     tickers = fetch_series_list("fred").Ticker.values
-#     fetch(tickers, 10)
-#     print("#########################FRED#############################")
-#     print(f"Finishing updating FRED after {time.time() - t1} seconds")    

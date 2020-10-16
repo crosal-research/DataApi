@@ -55,7 +55,8 @@ def fetch(tickers:str, limit:Optional[int] = 10) -> dict:
         dz = [(tck, df.loc[:, [tck]]) for tck in tickers]
         e1.map(lambda z: add_batch_observations(*z), dz)
 
-    return {"source": "JHU", 
+    return {"source": "JHU",
+            "Status": "updated",
             "time": pendulum.now().to_datetime_string(),
             "limit": limit}
 
