@@ -24,10 +24,13 @@ except:
 prefs = {'download.default_directory' : fpath}
 
 chrome_options.add_experimental_option('prefs', prefs)
-# chrome_options.add_argument("--headless")
+chrome_options.add_argument("--headless")
+
 
 url = "https://www3.bcb.gov.br/expectativas/publico/consulta/serieestatisticas"
 
+
+# Dates
 date_ini = pendulum.today().previous(pendulum.FRIDAY)\
                             .subtract(years=1).previous(pendulum.FRIDAY).format("DD/MM/Y")
 date_final = pendulum.today().previous(pendulum.FRIDAY).format("DD/MM/Y")
@@ -68,24 +71,30 @@ def _download() -> None:
         driver.find_element_by_id("tfDataFinal2").send_keys("11/09/2020")
 
         # change this to work in headless mode
-        name1="divPeriodoRefereEstatisticas:grupoAnoReferencia:anoReferenciaInicial"
-        name2="divPeriodoRefereEstatisticas:grupoAnoReferencia:anoReferenciaFinal"
-        driver.find_element_by_name(f"{name1}").send_keys(ini)
-        driver.find_element_by_name(f"{name2}").send_keys(end)
+        xpath1="//table/tbody[3]/tr[@class='fundoPadraoAClaro3']/td[2]/select"
+        xpath2="//table/tbody[3]/tr[@class='fundoPadraoAClaro3']/td[4]/select"
+
+        driver.find_element_by_xpath(xpath1).send_keys(ini)
+        driver.find_element_by_xpath(xpath2).send_keys(end)
 
         # submit para arquivos csv
-        button = driver.find_element_by_name("btnXLS").click()
+        btn = driver.find_element_by_xpath("//input[@name='btnXLS']")
+        btn.click()
         
         # fetch downloaded file e clean-up
         while True:
-            if os.path.exists(f"{fpath}Séries de estatísticas.xls"):
-                shutil.move(f"{fpath}Séries de estatísticas.xls", 
-                            f"{fpath}{indicador}.xls")    
+            if os.path.exists(f"{fpath}_de_"):
+                fname = f"{fpath}_de_"
+                shutil.move(fname, f"{fpath}{indicador}.xls")
                 break
-            time.sleep(0.3)
+                
+            elif os.path.exists(f"{fpath}Séries de estatísticas.xls"):
+                fname = f"{fpath}Séries de estatísticas.xls"
+                shutil.move(fname, f"{fpath}{indicador}.xls")
+                break
+            else:
+                time.sleep(0.3)
     driver.close()
-
-
 
 def _process(ticker: str) -> pd.DataFrame:
     if "IPCA" in ticker:
@@ -102,7 +111,6 @@ def _process(ticker: str) -> pd.DataFrame:
     df_final =  df.loc[:, [re.search("\d\d\d\d", tickers[0])[0]]]
     df_final.columns = [ticker]
     return df_final
-
 
 
 def fetch(tickers: str, limit: Optional[int]=10) -> dict:
