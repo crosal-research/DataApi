@@ -26,9 +26,7 @@ prefs = {'download.default_directory' : fpath}
 chrome_options.add_experimental_option('prefs', prefs)
 chrome_options.add_argument("--headless")
 
-
 url = "https://www3.bcb.gov.br/expectativas/publico/consulta/serieestatisticas"
-
 
 # Dates
 date_ini = pendulum.today().previous(pendulum.FRIDAY)\
