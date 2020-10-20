@@ -20,7 +20,8 @@ numbers = [30005, #FBCF
            37849, #SPC consultas
            37848, #Usecheque consultas
            35690, #exportações quantum
-           35590] # importaçõe quantum 
+           35590, # importaçõe quantum 
+           31873] # expdição de caixas, acessórios e chapas
 
 def build_url(num:int) -> str:
     """
