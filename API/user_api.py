@@ -2,7 +2,7 @@
 import os, json
 
 # imports of packages
-from bottle import Bottle, run, request, response, static_file #, template, TEMPLATE
+from bottle import Bottle, run, request, response, static_file, default_app #, template, TEMPLATE
 from truckpad.bottle.cors import CorsPlugin, enable_cors
 
 import pandas as pd
@@ -15,7 +15,8 @@ from Loaders.fetch_obs import fetch_obs
 
 # App definition
 root = os.path.join(os.path.dirname(__file__), 'static')
-app = Bottle()
+#app = Bottle()
+app = default_app()
 
 
 ######## Webpage End points and Assets routes
@@ -86,4 +87,4 @@ def upserts():
 
 
 app.install(CorsPlugin(origins=['http://localhost:5000']))
-run(app, host='localhost', port=8090, debbug=True)
+#run(app, host='localhost', port=8090, debbug=True)
