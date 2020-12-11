@@ -18,12 +18,13 @@ class Observation(db.Entity):
     obs = orm.Required(float)
     series = orm.Required(Series)
 
+
 class Source(db.Entity):
     name = orm.Required(str, unique=True)
     description = orm.Required(str)
     series = orm.Set(Series)
-    
 
+    
 class Table(db.Entity):
     ticker = orm.Required(str, unique=True)
     description =  orm.Required(str, unique=True)
@@ -31,17 +32,11 @@ class Table(db.Entity):
 
 
 # bootstrap db:
-# db.bind(provider='sqlite', filename='database.sqlite', create_db=True)    
-# db.generate_mapping(create_tables=True)
-
 db.bind(provider=config.DB["provider"], user=config.DB["user"], 
         password=config.DB["password"], host=config.DB["host"],
         port=config.DB["port"], database=config.DB["database"])
 db.generate_mapping(create_tables=True)
 
-# db.bind(provider='postgres', user="postgres", password="postgres", 
-#         host="34.121.43.144", port="5432", database="HF_Econ")
-# db.generate_mapping(create_tables=True)
 
 
 

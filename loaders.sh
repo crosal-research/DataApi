@@ -1,1 +1,1 @@
-python3 -m Loaders.sources.py
+python3 -m Loaders.Sources.sources
